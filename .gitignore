@@ -1,7 +1,10 @@
 ### IntelliJ IDEA ###
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
+.idea/                # IntelliJ project settings
+*.iml                 # Module files
+*.iws                 # IntelliJ workspace file
+/out/                 # Output folder
+/out                  # In case out/ wasn't ignored previously
+/.idea/workspace.xml  # User-specific settings (optional)
 
 ### Eclipse ###
 .apt_generated
@@ -18,9 +21,9 @@ bin/
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+dist/
+nbdist/
+.nb-gradle/
 
 ### VS Code ###
 .vscode/
