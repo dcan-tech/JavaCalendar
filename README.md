@@ -4,7 +4,7 @@
 
 ### Project Overview
 
-This project began as a school assignment, originally written as a single monolithic Java script that handled user input, calendar calculations, and terminal rendering. The goal of this refactoring effort is to apply industry best practices, including:
+This project began as a school assignment, originally written as a single monolithic JavaScript that handled user input, calendar calculations, and terminal rendering. The goal of this refactoring effort is to apply industry best practices, including:
 
 -   **MVC Architecture:** Separating logic into Model, View, and Controller.
 -   **Improved Code Readability:** Breaking down large methods into modular functions.
@@ -30,7 +30,7 @@ Example: `java com.calendar.Main 12 25`
 -   Highlights the selected day within the calendar.
 -   Supports displaying the current month dynamically based on the system date.
 
-### Planned Reintegrations and Improvements
+### Planned Reintegration and Improvements
 
 -   **Year Support:**
     -   Implement year input for accurate day-of-week calculations.
