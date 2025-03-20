@@ -2,6 +2,7 @@
 .idea/                # IntelliJ project settings
 *.iml                 # Module files
 *.iws                 # IntelliJ workspace file
+out/
 /out/                 # Output folder
 /out                  # In case out/ wasn't ignored previously
 /.idea/workspace.xml  # User-specific settings (optional)
