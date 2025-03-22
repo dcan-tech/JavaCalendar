@@ -4,47 +4,67 @@ import com.dylancanfield.calendarapp.util.Pair;
 
 public class CalendarCalculator {
 
-    // Existing methods, e.g., calculateDate and monthInfo
+    /**
+     * Calculates the day of the week using Zeller’s Congruence.
+     * @param day the day of the month
+     * @param month the month number (1–12)
+     * @param year the full year (e.g., 2025)
+     * @return Pair containing (index of day [0–6], name of day)
+     */
+    public static Pair<Integer, String> calculateDate(int day, int month, int year) {
+        String[] dayNames = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+        int[] monthOffsets = { 0, 3, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5 };  // Jan–Dec
 
-    public static Pair<Integer, String> calculateDate(int dd, int mm) {
-        String[] days = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
-        int[] m_no = { 0, 3, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5 };
-
-        int total = (2022 % 100) + ((2022 % 100) / 4) + dd + m_no[mm - 1] + 6;
-        String dow = days[total % 7];
-        int nod = total % 7;
-        return new Pair<>(nod, dow);
-    }
-
-    public static Pair<Integer, String> monthInfo(int dd, int mm) {
-        int dayCount = 0;
-        String monthString;
-        switch (mm) {
-            case 1:  monthString = "January";   dayCount = 31; break;
-            case 2:  monthString = "February";  dayCount = 28; break;
-            case 3:  monthString = "March";     dayCount = 31; break;
-            case 4:  monthString = "April";     dayCount = 30; break;
-            case 5:  monthString = "May";       dayCount = 31; break;
-            case 6:  monthString = "June";      dayCount = 30; break;
-            case 7:  monthString = "July";      dayCount = 31; break;
-            case 8:  monthString = "August";    dayCount = 31; break;
-            case 9:  monthString = "September"; dayCount = 30; break;
-            case 10: monthString = "October";   dayCount = 31; break;
-            case 11: monthString = "November";  dayCount = 30; break;
-            case 12: monthString = "December";  dayCount = 31; break;
-            default: monthString = "Invalid month"; break;
+        // Adjust for leap year (only affects dates in March or later)
+        if (isLeapYear(year)) {
+            monthOffsets[1] = 2;  // February has offset 2 in leap years
         }
-        return new Pair<>(dayCount, monthString);
+
+        int yearPart = year % 100;
+        int centuryPart = year / 100;
+
+        // Zeller-like calculation (simplified)
+        int total = yearPart + (yearPart / 4) + day + monthOffsets[month - 1] + (6 - 2 * (centuryPart % 4));
+        int dayIndex = total % 7;
+        String dayName = dayNames[dayIndex];
+
+        return new Pair<>(dayIndex, dayName);
     }
 
-    // Testing main method
-    public static void main(String[] args) {
-        // Test calculateDate
-        Pair<Integer, String> result = calculateDate(15, 3);
-        System.out.println("calculateDate(15, 3): " + result);
+    /**
+     * Returns number of days and name of the given month.
+     * @param month the month number (1–12)
+     * @param year the full year (for leap year evaluation)
+     * @return Pair containing (days in month, month name)
+     */
+    public static Pair<Integer, String> monthInfo(int month, int year) {
+        int dayCount;
+        String monthName;
 
-        // Test monthInfo
-        Pair<Integer, String> monthResult = monthInfo(1, 3);
-        System.out.println("monthInfo(1, 3): " + monthResult);
+        switch (month) {
+            case 1:  monthName = "January";   dayCount = 31; break;
+            case 2:  monthName = "February";
+                dayCount = (isLeapYear(year)) ? 29 : 28;
+                break;
+            case 3:  monthName = "March";     dayCount = 31; break;
+            case 4:  monthName = "April";     dayCount = 30; break;
+            case 5:  monthName = "May";       dayCount = 31; break;
+            case 6:  monthName = "June";      dayCount = 30; break;
+            case 7:  monthName = "July";      dayCount = 31; break;
+            case 8:  monthName = "August";    dayCount = 31; break;
+            case 9:  monthName = "September"; dayCount = 30; break;
+            case 10: monthName = "October";   dayCount = 31; break;
+            case 11: monthName = "November";  dayCount = 30; break;
+            case 12: monthName = "December";  dayCount = 31; break;
+            default: monthName = "Invalid";   dayCount = 0;  break;
+        }
+
+        return new Pair<>(dayCount, monthName);
     }
-} // End of CalendarCalculator class
+
+
+    private static boolean isLeapYear(int year) {
+        return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+    }
+
+}
