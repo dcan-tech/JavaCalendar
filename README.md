@@ -10,9 +10,17 @@ This project began as a school assignment, originally written as a single monoli
 -   **Improved Code Readability:** Breaking down large methods into modular functions.
 -   **Scalability:** Preparing the application for potential enhancements, such as year-based calculations and graphical interface integration.
 
-### Technology Stack
+## Tech Stack
 
--   Java 22
+- **Language:** Java 17+  
+- **Build Tool:** IntelliJ IDEA (2024.x)  
+- **Java SDK Used in Development:** OpenJDK 22  
+- **Libraries:**  
+  - `java.time.LocalDate` for date handling  
+  - `java.util.Scanner` for input  
+  - `java.io.PrintStream` for output to file
+- **Utilities:** Custom `Pair<K, V>` class (replacing `javafx.util.Pair` from original code)
+
 
 ### Installation/Usage
 
