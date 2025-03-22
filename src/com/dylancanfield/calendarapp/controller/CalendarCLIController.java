@@ -1,62 +1,88 @@
 package com.dylancanfield.calendarapp.controller;
 
 import com.dylancanfield.calendarapp.model.CalendarCalculator;
-import com.dylancanfield.calendarapp.view.CalendarRenderer;
 import com.dylancanfield.calendarapp.util.Pair;
+import com.dylancanfield.calendarapp.view.CalendarRenderer;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
+import java.time.LocalDate;
 import java.util.Scanner;
 
 public class CalendarCLIController {
 
     public void run() {
         Scanner scanner = new Scanner(System.in);
-        // Get the user's command
-        String command = menuChoice(scanner);
+        boolean running = true;
 
-        if (command.equals("e")) {
-            // ... existing "e" option code ...
-            System.out.print("\nEnter a date (mm/dd): ");
-            String input = scanner.nextLine();
-            String[] parts = input.split("/");
+        while (running) {
+            String command = menuChoice(scanner);
 
-            if (parts.length < 2) {
-                System.out.println("Invalid format. Please use mm/dd.");
-                // In a loop you might prompt again here
-                // For now, we exit this branch
-                return;
+            switch (command) {
+                case "e":
+                    System.out.print("\nEnter a date (mm/dd): ");
+                    String input = scanner.nextLine();
+                    String[] parts = input.split("/");
+
+                    if (parts.length < 2) {
+                        System.out.println("Invalid format. Please use mm/dd.");
+                        break;
+                    }
+
+                    int month = Integer.parseInt(parts[0].trim());
+                    int day = Integer.parseInt(parts[1].trim());
+
+                    var firstDayPair = CalendarCalculator.calculateDate(1, month);
+                    var monthInfo = CalendarCalculator.monthInfo(1, month);
+                    var dayPair = CalendarCalculator.calculateDate(day, month);
+
+                    System.out.printf("\nDisplaying calendar for %s %d (Current day: %s)\n",
+                            monthInfo.getValue(), day, dayPair.getValue());
+                    CalendarRenderer.renderMonth(firstDayPair.getKey(), monthInfo.getKey(), month, day);
+                    break;
+
+                case "t":
+                    var today = java.time.LocalDate.now();
+                    int monthVal = today.getMonthValue();
+                    int dayVal = today.getDayOfMonth();
+
+                    var firstOfMonth = CalendarCalculator.calculateDate(1, monthVal);
+                    var thisMonthInfo = CalendarCalculator.monthInfo(1, monthVal);
+                    var todayPair = CalendarCalculator.calculateDate(dayVal, monthVal);
+
+                    System.out.printf("\nDisplaying calendar for %s %d (Today: %s)\n",
+                            thisMonthInfo.getValue(), dayVal, todayPair.getValue());
+                    CalendarRenderer.renderMonth(firstOfMonth.getKey(), thisMonthInfo.getKey(), monthVal, dayVal);
+                    break;
+
+                case "fp":
+                    System.out.print("\nEnter month to print (1-12): ");
+                    int fileMonth = Integer.parseInt(scanner.nextLine().trim());
+
+                    var fileFirstDay = CalendarCalculator.calculateDate(1, fileMonth);
+                    var fileMonthInfo = CalendarCalculator.monthInfo(1, fileMonth);
+
+                    System.out.print("Enter output filename: ");
+                    String filename = scanner.nextLine().trim();
+
+                    try (PrintStream out = new PrintStream(filename)) {
+                        CalendarRenderer.renderMonthTo(out, fileFirstDay.getKey(), fileMonthInfo.getKey(), fileMonth, 0);
+                        System.out.println("Calendar written to " + filename);
+                    } catch (java.io.FileNotFoundException e) {
+                        System.out.println("Error writing to file: " + e.getMessage());
+                    }
+                    break;
+
+                case "q":
+                    System.out.println("Exiting...");
+                    running = false;
+                    break;
+
+                default:
+                    System.out.println("Invalid command.");
+                    break;
             }
-
-            int month = Integer.parseInt(parts[0].trim());
-            int day = Integer.parseInt(parts[1].trim());
-
-            Pair<Integer, String> firstDayPair = CalendarCalculator.calculateDate(1, month);
-            Pair<Integer, String> monthInfo = CalendarCalculator.monthInfo(1, month);
-            Pair<Integer, String> dayPair = CalendarCalculator.calculateDate(day, month);
-
-            System.out.printf("\nDisplaying calendar for %s %d (Current day: %s)\n",
-                    monthInfo.getValue(), day, dayPair.getValue());
-            CalendarRenderer.renderMonth(firstDayPair.getKey(), monthInfo.getKey(), month, day);
-        }
-        else if (command.equals("t")) { // New option for today's date
-            // Get today's date using java.time.LocalDate
-            java.time.LocalDate today = java.time.LocalDate.now();
-            int monthVal = today.getMonthValue();
-            int dayVal = today.getDayOfMonth();
-
-            // Use the model to compute the starting day for the month and month info
-            Pair<Integer, String> firstDayPair = CalendarCalculator.calculateDate(1, monthVal);
-            Pair<Integer, String> monthInfo = CalendarCalculator.monthInfo(1, monthVal);
-            Pair<Integer, String> dayPair = CalendarCalculator.calculateDate(dayVal, monthVal);
-
-            System.out.printf("\nDisplaying calendar for %s %d (Today: %s)\n",
-                    monthInfo.getValue(), dayVal, dayPair.getValue());
-            CalendarRenderer.renderMonth(firstDayPair.getKey(), monthInfo.getKey(), monthVal, dayVal);
-        }
-        // (You would add additional else-if blocks for "n", "p", "fp", etc.)
-        else if (command.equals("q")) {
-            System.out.println("Exiting...");
-        }
-        else {
-            System.out.println("Invalid command.");
         }
 
         scanner.close();
@@ -73,9 +99,5 @@ public class CalendarCLIController {
         System.out.println(" \"q\" to quit the program");
         System.out.println();
         return scanner.nextLine();
-    }
-
-    private void newline() {
-        System.out.println();
     }
 }
