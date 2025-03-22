@@ -25,64 +25,54 @@ public class CalendarRenderer {
         }
     }
 
-
-    // Helper method to print a horizontal line
+    // Prints a horizontal separator line
     private static void lined() {
-        for (int i = 0; i < 78; i++) {
-            System.out.print('─'); // Unicode HORIZONTAL LINE character
+        for (int i = 0; i < 77; i++) {
+            System.out.print('─');
         }
         System.out.println();
     }
 
-    // Helper method to draw the first row of the calendar
+    // Helper method to draw the first week
     private static int firstRow(int startIndex, int currentDay, int dayCount) {
         int dayCounter = 1;
         for (int i = 0; i < 7; i++) {
-            System.out.print("|");
             if (i >= startIndex && dayCounter <= dayCount) {
-                System.out.printf("%2d", dayCounter);
-                if (dayCounter == currentDay) {
-                    System.out.print("*");
-                } else {
-                    System.out.print(" ");
-                }
+                printDayCell(dayCounter, currentDay);
                 dayCounter++;
             } else {
-                System.out.print("    ");
+                System.out.print("|          "); // empty cell
             }
         }
         System.out.println("|");
         return dayCounter;
     }
 
-
-    // Draws a row of dates and returns the updated dayCounter.
+    // Helper method to draw the rest of the date rows
     private static int drawDateRow(int dayCounter, int dayCount, int currentDay) {
         for (int i = 0; i < 7; i++) {
-            System.out.print("|");
             if (dayCounter <= dayCount) {
-                // Print the day number in a fixed width (e.g., 2 digits)
-                System.out.printf("%2d", dayCounter);
-                // If this is the current day, print a star; else a space.
-                if (dayCounter == currentDay) {
-                    System.out.print("*");
-                } else {
-                    System.out.print(" ");
-                }
+                printDayCell(dayCounter, currentDay);
                 dayCounter++;
             } else {
-                // If there are no more days, print empty space
-                System.out.print("    ");
+                System.out.print("|          ");
             }
         }
         System.out.println("|");
         return dayCounter;
     }
 
-
-    public static void main(String[] args) {
-        // Test with: firstOfMonthIndex = 3, dayCount = 31, month = 3, currentDay = 15
-        renderMonth(3, 31, 3, 15);
+    // Utility to print a properly formatted cell
+    private static void printDayCell(int day, int currentDay) {
+        String content = (day == currentDay) ? String.format("%2d*", day) : String.format("%2d ", day);
+        while (content.length() < 10) {
+            content += " ";
+        }
+        System.out.print("|" + content);
     }
 
+    // Main for test/demo
+    public static void main(String[] args) {
+        renderMonth(3, 31, 3, 15); // Example: March with current day 15
+    }
 }
