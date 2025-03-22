@@ -50,7 +50,7 @@ Example: `java com.calendar.Main 12 25`
     -   Improve the visual presentation of the calendar in the terminal.
     -   Add options for different calendar styles.
 -   **Graphical User Interface (GUI):**
-    -   Integrate a GUI using (Specify Library, e.g. Swing or JavaFX).
+    -   Integrate a GUI using (e.g. Swing or JavaFX).
     -   Provide a user-friendly interface for calendar navigation and date selection.
 
 ### Contributing
